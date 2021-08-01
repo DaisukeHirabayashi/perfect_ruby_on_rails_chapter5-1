@@ -1,7 +1,10 @@
 class AsyncLogJob < ApplicationJob
-  queue_as :async_log
-
-  def perform(message: "hello")
-    AsyncLog.create!(message:message)
+  queue_as do
+    case self.arguments.first[:message]
+    when "to async_log"
+      :async_log
+    else
+      :default
+    end
   end
 end
